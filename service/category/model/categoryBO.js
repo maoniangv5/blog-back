@@ -10,6 +10,10 @@ var categorySchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    flag: {
+        type: Boolean,
+        default: false
+    },
     des: {
         type: String
     }

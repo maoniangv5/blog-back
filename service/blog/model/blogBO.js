@@ -2,23 +2,50 @@
 var mongoose = require('../../../db/db');
 
 var fileSchema = mongoose.Schema({
-    name: {
+    title: {
         type: String,
         require: true
     },
-    path: {
-        type: String,
-        require: true
-    },
-    url: {
-        type: String,
-        require: true
-    },
-    size: {
-        type: Number
-    },
-    type: {
+    eTitle: {
         type: String
+    },
+    category: {
+        type: Array,
+        require: true
+    },
+    tag: {
+        type: Array
+    },
+    cover: {
+        type: String,
+        default: 'cover'
+    },
+    flag: {
+        type: Boolean,
+        default: false
+    },
+    isPublic: {
+        type: Boolean,
+        default: true
+    },
+    isComment: {
+        type: Boolean,
+        default: true
+    },
+    comment: {
+        type: Array
+    },
+    stars: {
+        type: Number,
+        default: 0
+    },
+    deStars: {
+        type: Number,
+        default: 0
+    },
+    read: {
+        type: Number,
+        default: 0
     },
     des: {
         type: String

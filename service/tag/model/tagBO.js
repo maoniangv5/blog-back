@@ -10,6 +10,10 @@ var tagSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    flag: {
+        type: Boolean,
+        default: false
+    },
 }, {
         timestamps: {
             createdAt: 'createdAt',
