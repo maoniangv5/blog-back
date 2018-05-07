@@ -1,24 +1,14 @@
 
 var mongoose = require('../../../db/db');
 
-var fileSchema = mongoose.Schema({
+var categorySchema = mongoose.Schema({
     name: {
         type: String,
         require: true
     },
-    path: {
-        type: String,
-        require: true
-    },
-    url: {
-        type: String,
-        require: true
-    },
-    size: {
-        type: Number
-    },
-    type: {
-        type: String
+    hot: {
+        type: Number,
+        default: 0
     },
     des: {
         type: String
@@ -31,4 +21,4 @@ var fileSchema = mongoose.Schema({
         versionKey: false
     });
 
-module.exports = mongoose.model('files', fileSchema);
+module.exports = mongoose.model('categorys', categorySchema);
