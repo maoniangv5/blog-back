@@ -40,7 +40,7 @@ ParamCheck.composeParams = function (req, paramArr) {
                         var isreqType = false;
                         var notNullError = ParamCheck.isNull(req, paramArr.require);
                         if (notNullError) {
-                            errInfo.push(notNullError);
+                            errInfo = notNullError;
                         } else {
                             for (var r in paramArr['require']) {
                                 tmpV = req[ParamCheck.paramobj[req.method]][r];
@@ -54,12 +54,12 @@ ParamCheck.composeParams = function (req, paramArr) {
                                             }
                                         }
                                         if(!flagr) {
-                                            errInfo.push('请检查参数类型！');
+                                            errInfo = '请检查参数类型！';
                                         } else {
                                             if((typeof tmpV) === paramArr['paramType'][t]) {
                                                 query[r] = tmpV;
                                             } else {
-                                                errInfo.push('请检查参数类型！');
+                                                errInfo = '请检查参数类型！';
                                             }
                                         }
                                     }
@@ -92,7 +92,7 @@ ParamCheck.composeParams = function (req, paramArr) {
                                             }
                                         }
                                         if(!flago) {
-                                            errInfo.push('请检查参数类型！');
+                                            errInfo = '请检查参数类型！';
                                         } else {
                                             if((typeof tmpV) === paramArr['paramType'][t]) {
                                                 query[paramArr['other'][i]] = tmpV;
