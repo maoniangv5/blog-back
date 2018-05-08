@@ -1,7 +1,7 @@
 
-let Tag = require('./model/tagBO');
+let Comment = require('./model/commentBO');
 let ServiceGenerator = require('../../common/serviceGenerator');
 
-let TagService = ServiceGenerator.generate(Tag, '_id');
+let CommentService = ServiceGenerator.generate(Comment, '_id');
 
-module.exports = TagService;
+module.exports = CommentService;
