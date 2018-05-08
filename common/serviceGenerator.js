@@ -90,7 +90,7 @@ ServiceGenerator.generate = function(model, key) {
         if (bo._id) {
             delete bo._id;
         }
-        model.update(query, bo, function(err, ret) {
+        model.update(query, bo, { multi: true }, function(err, ret) {
             callback(err, ret);
         })
     };
