@@ -10,17 +10,11 @@ var commentSchema = mongoose.Schema({
         type: String,
         require: true  
     },
-    content_chain: {
-        type: String,
-        default: null
+    chain_id: {
+        type: String
     },
     pre_id: {
         type: String,
-        default: null
-    },
-    root_pre_id: {
-        type: String,
-        default: null
     },
     uniq_id: {
         type: String,

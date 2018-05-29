@@ -10,15 +10,14 @@ var fileSchema = mongoose.Schema({
         type: String
     },
     category: {
-        type: Array,
+        type: String,
         require: true
     },
     tag: {
         type: Array
     },
     cover: {
-        type: String,
-        default: 'cover'
+        type: String
     },
     flag: {
         type: Boolean,
@@ -32,23 +31,13 @@ var fileSchema = mongoose.Schema({
         type: Boolean,
         default: true
     },
-    comment: {
-        type: Array
-    },
-    stars: {
-        type: Number,
-        default: 0
-    },
-    deStars: {
+    hot: {
         type: Number,
         default: 0
     },
     read: {
         type: Number,
         default: 0
-    },
-    des: {
-        type: String
     }
 }, {
         timestamps: {

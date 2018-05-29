@@ -3,7 +3,7 @@ let router = express.Router();
 
 let RestMsg = require('../../common/restmsg');
 let ParamCheck = require('../../common/paramcheck');
-let BlogService = require('../../service/blog/blogService');
+let CommentService = require('../../service/comment/commentService');
 
 let _privateFun = router.prototype;
 
@@ -20,15 +20,15 @@ _privateFun.prsBO2VO = function (obj) {
 router.route('/')
     .get(function (req, res, next) {
         let restmsg = new RestMsg();
-        let query = {};
-        // updatedAt倒叙，name正序排列
-        let order = [{'updatedAt': -1, 'name': 1}];
+        let query = req.query;
+        // updatedAt倒叙排列
+        let order = [{ 'updatedAt': -1 }];
 
-        BlogService.findAndOrder(query, order, function (err, obj) {
+        CommentService.findAndOrder(query, order, function (err, obj) {
             if (err) {
                 restmsg.errorMsg(err);
                 res.send(restmsg)
-                return 
+                return
             }
             restmsg.setResult(obj)
             res.send(restmsg)
@@ -40,7 +40,9 @@ router.route('/')
 
         let params = {
             require: {
-                name: '类目名称'
+                content: '评论内容',
+                blog_id: '文章ID',
+                uniq_id: 'UNIQ ID'
             }
         };
         let paramsTmp = ParamCheck.composeParams(req, params);
@@ -49,42 +51,60 @@ router.route('/')
             res.send(restmsg);
             return
         }
-
-        BlogService.count(paramsTmp.query, function (err, count) {
+        CommentService.save(req.body, function (err, obj) {
             if (err) {
                 restmsg.errorMsg(err);
                 res.send(restmsg)
-                return 
+                return
             }
-            if (count !== 0) {
-                restmsg.errorMsg('类目已存在！');
-                res.send(restmsg)
-                return 
-            }
-            BlogService.save(paramsTmp.query, function (err, obj) {
+            CommentService.getById(obj._id, function (err, ret) {
                 if (err) {
-                    restmsg.errorMsg(err);
-                    res.send(restmsg)
-                    return 
+                    console.log(err)
                 }
-                restmsg.setResult(obj)
+                if (!ret.root_pre_id) {
+                    CommentService.update(obj, { root_pre_id: obj._id }, function (err, ret) {
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            })
+
+            restmsg.setResult(obj)
+            res.send(restmsg)
+            return
+        })
+    })
+
+router.route('/hot')
+    .get(function (req, res, next) {
+        let restmsg = new RestMsg();
+        let query = req.query;
+        // hot倒叙排列
+        let order = [{ 'hot': -1 }];
+
+        CommentService.findAndOrder(query, order, function (err, obj) {
+            if (err) {
+                restmsg.errorMsg(err);
                 res.send(restmsg)
                 return
-            })
+            }
+            restmsg.setResult(obj)
+            res.send(restmsg)
+            return
         })
     })
 
 router.route('/:id')
     .delete(function (req, res, next) {
         let restmsg = new RestMsg();
-        let query = {
-            _id: req.params.id
-        }
-        BlogService.remove(query, function (err, obj) {
+        let query = { $or: [{ _id: req.params.id }, { chain_id: { $regex: new RegExp(req.params.id, 'i') } }] }
+
+        CommentService.update(query, { "flag": true }, function (err, obj) {
             if (err) {
                 restmsg.errorMsg(err);
                 res.send(restmsg)
-                return 
+                return
             }
             restmsg.setResult('')
             res.send(restmsg)

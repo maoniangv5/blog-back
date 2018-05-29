@@ -51,20 +51,25 @@ router.route('/')
             res.send(restmsg);
             return
         }
-
-        CommentService.save(paramsTmp.query, function (err, obj) {
+        CommentService.save(req.body, function (err, obj) {
             if (err) {
                 restmsg.errorMsg(err);
                 res.send(restmsg)
                 return
             }
-            if (!obj.root_pre_id) {
-                CommentService.update(obj, { root_pre_id: obj._id }, function (err, ret) {
-                    if (err) {
-                        console.log(err)
-                    }
-                })
-            }
+            CommentService.getById(obj._id, function (err, ret) {
+                if (err) {
+                    console.log(err)
+                }
+                if (!ret.root_pre_id) {
+                    CommentService.update(obj, { root_pre_id: obj._id }, function (err, ret) {
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            })
+
             restmsg.setResult(obj)
             res.send(restmsg)
             return
@@ -91,26 +96,9 @@ router.route('/hot')
     })
 
 router.route('/:id')
-    .put(function (req, res, next) {
-        let restmsg = new RestMsg();
-        let query = {
-            _id: req.params.id
-        }
-
-        CommentService.update(query, req.body, function (err, obj) {
-            if (err) {
-                restmsg.errorMsg(err);
-                res.send(restmsg)
-                return
-            }
-            restmsg.setResult('')
-            res.send(restmsg)
-            return
-        })
-    })
     .delete(function (req, res, next) {
         let restmsg = new RestMsg();
-        let query = { $or: [{ _id: req.params.id }, { root_pre_id: req.params.id }] }
+        let query = { $or: [{ _id: req.params.id }, { chain_id: { $regex: new RegExp(req.params.id, 'i') } }] }
 
         CommentService.update(query, { "flag": true }, function (err, obj) {
             if (err) {
